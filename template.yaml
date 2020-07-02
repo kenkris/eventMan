@@ -21,19 +21,14 @@ Resources:
          # artistAuth1:
           #  UserPoolArn: arn:aws:cognito-idp:eu-central-1:845376454911:userpool/eu-central-1_l19y1ueM5
 
-
-
   EventTesterFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./src/Lambda/
       Handler: Lambda::Lambda.EventHandler::EventTesterHandler
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
       Timeout: 30
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
-        Variables:
-          PARAM1: VALUE
       Events:
         EventTester:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
@@ -41,6 +36,38 @@ Resources:
             RestApiId: !Ref EventMan
             Path: /eventTester
             Method: get
+
+  EventDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: EventDB
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: skgsi
+          AttributeType: S
+        - AttributeName: data
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: skgsi
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 10
+        WriteCapacityUnits: 10
+      GlobalSecondaryIndexes:
+        - IndexName: skgsi-data-index
+          KeySchema:
+            - AttributeName: skgsi
+              KeyType: HASH
+            - AttributeName: data
+              KeyType: RANGE
+          Projection:
+            ProjectionType: "ALL"
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
 
 #Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
