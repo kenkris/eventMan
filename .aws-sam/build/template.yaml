@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Sample SAM Template for AWS
+
+  '
+Globals:
+  Function:
+    Timeout: 10
+Resources:
+  EventMan:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: '''*'''
+  EventTesterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: EventTesterFunction
+      Handler: Lambda::Lambda.EventHandler::EventTesterHandler
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Environment:
+        Variables:
+          PARAM1: VALUE
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: EventMan
+            Path: /eventTester
+            Method: get
