@@ -21,25 +21,15 @@ namespace Lambda
 
         public async Task<APIGatewayProxyResponse> CreateEvent(APIGatewayProxyRequest request, ILambdaContext context)
         {
-
-
-            // TODO
             try
             {
                 var eventModel = JsonConvert.DeserializeObject<EventModel>(request.Body);
-                Console.WriteLine(eventModel.Name);
-                Console.WriteLine(eventModel.PK);
-                return ApiResponse.Ok("O K ");
+                return ApiResponse.Ok(await _eventAccess.CreateEvent(eventModel));
             }
-            catch
+            catch(Exception e)
             {
                 return ApiResponse.ClientError("Bad request");
             }
-
-
-
-            return ApiResponse.NotImplemented();
-            // return ApiResponse.Ok(_eventAccess.CreateEvent());
         }
 
         public async Task<APIGatewayProxyResponse> EventTesterHandler(APIGatewayProxyRequest request, ILambdaContext context)

@@ -15,7 +15,7 @@ Resources:
   EventTesterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/940d69059dda0fa77599503873e5f3c5
+      CodeUri: s3://eventmanbucket/b5bbe316e2de1fad102d712f036daaa6
       Handler: Lambda::Lambda.EventHandler::EventTesterHandler
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -31,7 +31,7 @@ Resources:
   CreateEvent:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/2896bb154db5ea2bec1dba77f4177bec
+      CodeUri: s3://eventmanbucket/6e02344d9c45c6f4cbbe4cc22051ea09
       Handler: Lambda::Lambda.EventHandler::CreateEvent
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -61,8 +61,8 @@ Resources:
       - AttributeName: skgsi
         KeyType: RANGE
       ProvisionedThroughput:
-        ReadCapacityUnits: 10
-        WriteCapacityUnits: 10
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
       GlobalSecondaryIndexes:
       - IndexName: skgsi-data-index
         KeySchema:

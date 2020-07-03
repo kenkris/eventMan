@@ -19,8 +19,9 @@ namespace Lambda.Access
         {
             var table = Table.LoadTable(DbClient, EventTable);
 
+            var newGuid = Guid.NewGuid();
             var eventDocument = new Document();
-            eventDocument["pk"] = new Guid();
+            eventDocument["pk"] = newGuid;
             eventDocument["skgsi"] = "EventInfo";
             eventDocument["data"] = eventModel.StartDate;
             eventDocument["endDate"] = eventModel.EndDate;
@@ -30,8 +31,8 @@ namespace Lambda.Access
 
             try
             {
-                var response = await table.PutItemAsync(eventDocument);
-                eventModel.PK = (Guid) response["pk"];
+                await table.PutItemAsync(eventDocument);
+                eventModel.PK = newGuid;
                 return eventModel;
             }
             catch (Exception e)
