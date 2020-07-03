@@ -15,7 +15,7 @@ Resources:
   EventTesterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/12a3cb0ad5b889e9f292eae31113bbc3
+      CodeUri: s3://eventmanbucket/940d69059dda0fa77599503873e5f3c5
       Handler: Lambda::Lambda.EventHandler::EventTesterHandler
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -28,6 +28,22 @@ Resources:
               Ref: EventMan
             Path: /eventTester
             Method: get
+  CreateEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://eventmanbucket/2896bb154db5ea2bec1dba77f4177bec
+      Handler: Lambda::Lambda.EventHandler::CreateEvent
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: EventMan
+            Path: /event
+            Method: post
   EventDB:
     Type: AWS::DynamoDB::Table
     Properties:
