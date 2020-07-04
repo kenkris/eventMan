@@ -10,6 +10,5 @@ namespace Lambda.Models
         public DateTime EndDate;
         public string Venue;
         public string Address;
-        public List<User> Participants;
     }
 }

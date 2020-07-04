@@ -69,6 +69,22 @@ Resources:
             Path: /event
             Method: get
 
+  CreateUser:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/Lambda/
+      Handler: Lambda::Lambda.UserHandler::CreateUser
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EventMan
+            Path: /user
+            Method: post
+
   EventDB:
     Type: AWS::DynamoDB::Table
     Properties:

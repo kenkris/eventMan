@@ -1,6 +1,6 @@
 namespace Lambda.Models
 {
-    public class User
+    public class UserModel : BaseModel
     {
         public string Name;
         public string Address;
