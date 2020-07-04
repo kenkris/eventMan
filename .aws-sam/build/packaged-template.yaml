@@ -20,7 +20,7 @@ Resources:
   EventTesterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/89518322fd734aecdf08d54605c49627
+      CodeUri: s3://eventmanbucket/9186eef31014ca5da877a705e6cc3d13
       Handler: Lambda::Lambda.EventHandler::EventTesterHandler
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -36,7 +36,7 @@ Resources:
   CreateEvent:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/bbcf82fcf561ddd76645c6065378dfe3
+      CodeUri: s3://eventmanbucket/5706ab292439da08cec951adc6592ec2
       Handler: Lambda::Lambda.EventHandler::CreateEvent
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -52,7 +52,7 @@ Resources:
   GetEvent:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/3df1c72e801f6d5c13414e37d57b9127
+      CodeUri: s3://eventmanbucket/5d16ec031e210ecd0ef8fbf021cd2cda
       Handler: Lambda::Lambda.EventHandler::GetEvents
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -68,7 +68,7 @@ Resources:
   CreateUser:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/d43dbe28586204a9aa53a036a0e90aeb
+      CodeUri: s3://eventmanbucket/e6fb83aa7022bc6828d7340dcc8e2ecb
       Handler: Lambda::Lambda.UserHandler::CreateUser
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -81,6 +81,38 @@ Resources:
               Ref: EventMan
             Path: /user
             Method: post
+  UserSignUpForEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://eventmanbucket/1147a74b0a145129ba191c5e01fab23b
+      Handler: Lambda::Lambda.EventHandler::UserSignUpForEvent
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: EventMan
+            Path: /userSignUp
+            Method: post
+  GetUserSignUpsForEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://eventmanbucket/556ba068cd0540276f972080d8189236
+      Handler: Lambda::Lambda.EventHandler::GetUserSignUpsForEvent
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: EventMan
+            Path: /userSignUp/{id}
+            Method: get
   EventDB:
     Type: AWS::DynamoDB::Table
     Properties:

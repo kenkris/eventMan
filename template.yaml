@@ -85,6 +85,38 @@ Resources:
             Path: /user
             Method: post
 
+  UserSignUpForEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/Lambda/
+      Handler: Lambda::Lambda.EventHandler::UserSignUpForEvent
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EventMan
+            Path: /userSignUp
+            Method: post
+
+  GetUserSignUpsForEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/Lambda/
+      Handler: Lambda::Lambda.EventHandler::GetUserSignUpsForEvent
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EventMan
+            Path: /userSignUp/{id}
+            Method: get
+
   EventDB:
     Type: AWS::DynamoDB::Table
     Properties:

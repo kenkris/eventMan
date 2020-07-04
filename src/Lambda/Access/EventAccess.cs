@@ -74,5 +74,71 @@ namespace Lambda.Access
 
             return result;
         }
+
+        public async Task<bool> SignUpUser(UserSignUpModel userSignUpModel)
+        {
+            var table = Table.LoadTable(DbClient, EventTable);
+
+            var newGuid = Guid.NewGuid();
+            var eventDocument = new Document();
+            eventDocument["pk"] = userSignUpModel.EventPk;
+            eventDocument["skgsi"] = "EventSignup#" + userSignUpModel.UserPk;
+            eventDocument["data"] = userSignUpModel.SignUpDate;
+            eventDocument["cancelDate"] = userSignUpModel.CancelDate;
+            eventDocument["payed"] = userSignUpModel.Payed;
+
+            try
+            {
+                await table.PutItemAsync(eventDocument);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<List<UserModel>> FetchUserSignUpsForEvent(EventModel eventModel)
+        {
+
+            // TODO get EVENTUSER
+            // TODO get USER WHERE ID IN .....
+
+            var query = new QueryRequest
+            {
+                TableName = EventTable,
+                KeyConditionExpression = $"pk = :eventId and begins_with({GSI}, :eventSignUpStatic)",
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+                {
+                    { ":eventId", new AttributeValue { S = eventModel.PK.ToString() } },
+                    { ":eventSignUpStatic", new AttributeValue { S = "EventSignup#" } }
+                }
+            };
+
+            var queryResult = await DbClient.QueryAsync(query);
+
+            var result = new List<UserModel>();
+            var userAccess = new UserAccess();
+            foreach (var item in queryResult.Items)
+            {
+                var userPk = "";
+                try
+                {
+                    userPk = item[GSI].S.Split("#")[1];
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Could not extract personId " + e.Message);
+                }
+
+                var user = await userAccess.GetUser(new UserModel{ PK = new Guid(userPk)});
+                result.Add(user);
+            }
+
+            return result;
+
+
+            throw new NotImplementedException();
+        }
     }
 }

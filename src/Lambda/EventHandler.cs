@@ -42,5 +42,27 @@ namespace Lambda
         {
             return ApiResponse.Ok(await  _eventAccess.FetchEvents());
         }
+
+        public async Task<APIGatewayProxyResponse> UserSignUpForEvent(APIGatewayProxyRequest request, ILambdaContext context)
+        {
+            try
+            {
+                var userSignUpModel = JsonConvert.DeserializeObject<UserSignUpModel>(request.Body);
+                return ApiResponse.Ok(await  _eventAccess.SignUpUser(userSignUpModel));
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return ApiResponse.ClientError("Bad request");
+            }
+        }
+
+        public async Task<APIGatewayProxyResponse> GetUserSignUpsForEvent(APIGatewayProxyRequest request,
+            ILambdaContext context)
+        {
+            if (!request.PathParameters.TryGetValue("id", out var eventPk))
+                return ApiResponse.ClientError("Missing id param");
+            return ApiResponse.Ok(await _eventAccess.FetchUserSignUpsForEvent(new EventModel{ PK = new Guid(eventPk)}));
+        }
     }
 }
