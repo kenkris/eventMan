@@ -28,18 +28,19 @@ namespace Lambda
             }
             catch(Exception e)
             {
+                Console.WriteLine(e.Message);
                 return ApiResponse.ClientError("Bad request");
             }
         }
 
-        public async Task<APIGatewayProxyResponse> EventTesterHandler(APIGatewayProxyRequest request, ILambdaContext context)
+        public APIGatewayProxyResponse EventTesterHandler(APIGatewayProxyRequest request, ILambdaContext context)
         {
             return ApiResponse.Ok( _eventAccess.EventTester());
         }
 
-        public async Task<APIGatewayProxyResponse> GetAllEvents(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> GetEvents(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            return ApiResponse.Ok(await  _eventAccess.FetchAllEvents());
+            return ApiResponse.Ok(await  _eventAccess.FetchEvents());
         }
     }
 }

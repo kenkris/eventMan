@@ -12,10 +12,15 @@ Resources:
     Properties:
       StageName: Prod
       Cors: '''*'''
+      Auth:
+        DefaultAuthorizer: eventAuth
+        Authorizers:
+          eventAuth:
+            UserPoolArn: arn:aws:cognito-idp:eu-central-1:845376454911:userpool/eu-central-1_l19y1ueM5
   EventTesterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/b5bbe316e2de1fad102d712f036daaa6
+      CodeUri: s3://eventmanbucket/cc9e9a14aafa93b8f9f75275e7fba54c
       Handler: Lambda::Lambda.EventHandler::EventTesterHandler
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -31,7 +36,7 @@ Resources:
   CreateEvent:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://eventmanbucket/6e02344d9c45c6f4cbbe4cc22051ea09
+      CodeUri: s3://eventmanbucket/bc67676a57972671489d1dd5da1f779b
       Handler: Lambda::Lambda.EventHandler::CreateEvent
       Runtime: dotnetcore3.1
       Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
@@ -44,6 +49,22 @@ Resources:
               Ref: EventMan
             Path: /event
             Method: post
+  GetEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://eventmanbucket/05516f2aa7c833785a9a5f18f5283360
+      Handler: Lambda::Lambda.EventHandler::GetEvents
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: EventMan
+            Path: /event
+            Method: get
   EventDB:
     Type: AWS::DynamoDB::Table
     Properties:

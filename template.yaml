@@ -15,11 +15,11 @@ Resources:
     Properties:
       StageName: Prod
       Cors: "'*'"
-      #Auth:
-       # DefaultAuthorizer: artistAuth1
-        #Authorizers:
-         # artistAuth1:
-          #  UserPoolArn: arn:aws:cognito-idp:eu-central-1:845376454911:userpool/eu-central-1_l19y1ueM5
+      Auth:
+        DefaultAuthorizer: eventAuth
+        Authorizers:
+          eventAuth:
+            UserPoolArn: arn:aws:cognito-idp:eu-central-1:845376454911:userpool/eu-central-1_l19y1ueM5
 
   EventTesterFunction:
     Type: AWS::Serverless::Function
@@ -52,6 +52,22 @@ Resources:
             RestApiId: !Ref EventMan
             Path: /event
             Method: post
+
+  GetEvent:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/Lambda/
+      Handler: Lambda::Lambda.EventHandler::GetEvents
+      Runtime: dotnetcore3.1
+      Role: arn:aws:iam::845376454911:role/service-role/MessageScan-role-av1nmp7k
+      Timeout: 30
+      Events:
+        EventTester:
+          Type: Api
+          Properties:
+            RestApiId: !Ref EventMan
+            Path: /event
+            Method: get
 
   EventDB:
     Type: AWS::DynamoDB::Table

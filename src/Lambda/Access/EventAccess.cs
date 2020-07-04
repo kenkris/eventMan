@@ -41,15 +41,16 @@ namespace Lambda.Access
             }
         }
 
-        public async Task<List<EventModel>> FetchAllEvents()
+        public async Task<List<EventModel>> FetchEvents()
         {
             var query = new QueryRequest
             {
                 TableName = EventTable,
-                KeyConditionExpression = "SKGSI = :eventStatic",
+                IndexName = SKGSI_DATA_INDEX,
+                KeyConditionExpression = GSI + " = :eventStatic",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                 {
-                    { ":eventStatic", new AttributeValue { S = "Artist" } }
+                    { ":eventStatic", new AttributeValue { S = "EventInfo" } }
                 },
 
             };
@@ -60,10 +61,14 @@ namespace Lambda.Access
             {
                 result.Add(new EventModel()
                 {
-                    PK =  new Guid(item["PK"].S),
-                    SKGSI = item["SK-GSI-PK"].S,
-                    Data = item["Data"].S,
-                    Name = item["Name"].S
+                    PK =  new Guid(item["pk"].S),
+                    SKGSI = item["skgsi"].S,
+                    Data = item["data"].S, // Start date string goes here. Not sure its needed in future
+                    Address = item["address"].S,
+                    StartDate = Convert.ToDateTime(item["data"].S),
+                    EndDate = Convert.ToDateTime(item["endDate"].S),
+                    Name = item["name"].S,
+                    Venue = item["venue"].S
                 });
             }
 
