@@ -25,8 +25,8 @@ namespace EventMan.Tests
             return msg.Replace("\n","");
     }
 
-    /*[Fact]
-    public async Task TestHelloWorldFunctionHandler()
+    //[Fact]
+    /*public async Task TestHelloWorldFunctionHandler()
     {
             var request = new APIGatewayProxyRequest();
             var context = new TestLambdaContext();
