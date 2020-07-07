@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>HelloWorld.Tests</RootNamespace>
+    <RootNamespace>EventMan.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
